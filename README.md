@@ -1,80 +1,40 @@
-# A minimal QT application, without the nonsense
+# cpp-qt-base
 
-This repository contains a minimal QT application that can be compiled
-without using CMake or QT Creator.
+A minimal C++/Qt6 base project using CMake. Intended as a starting point for new Qt Widgets applications.
 
 ## Requirements
 
-- A C++ compiler (tested with GCC 14.2.1 and Clang 19.1.7, both on Linux-x86_64)
-- QT libraries and headers
-- The QT development tools `moc` and `uic`
+- CMake >= 3.19
+- A C++17 compiler (tested with GCC 14.2.1 and Clang 19.1.7 on Linux x86_64)
+- Qt6 development libraries
 
-On Fedora Linux they are contained in the `qt6-qtbase-devel` package.
-I have not tested this on other operating systems.
+On Fedora: `sudo dnf install cmake gcc-c++`
 
-## tl;dr
+## Build
 
-If you just want to try out this program you can run (if you have `make` installed)
-
-```
-make && ./run
+```sh
+cmake -B build -S .
+cmake --build build
 ```
 
-## Explanation
+Run the resulting binary:
 
-Following the most basic QT Creator template, there are 4 source code files:
-
-- `main.cpp`: the main source file
-- `mainwindow.h`: the header file for the main window of the application
-- `mainwindow.cpp`: the C++ source for the main window
-- `mainwindow.ui`: the UI file with an XML description of the main window
-
-The compilation is done in 3 steps:
-
-1. Pre-process `mainwindow.h` with `moc` to obtain `moc_mainwindow.cpp`
-2. Compile `mainwindow.ui` with `uic` to obtain `ui_mainwindow.h`
-3. Compile the C++ files, including `moc_mainwindow.cpp`
-
-The `Makefile` implements these three steps.
-
-The first two steps are straightforward: first you need to locate the
-`moc` and `uic` commands. They are usually in the QT installation
-folder - for example I have them in `/usr/lib64/qt/libexec`. Then run:
-
-```
-/usr/lib64/qt/libexec/moc mainwindow.h > moc_mainwindow.cpp
-/usr/lib64/qt/libexex/uic mainwindow.ui > ui_mainwindow.h
+```sh
+./build/CppQtBase
 ```
 
-These steps can be skipped if one prefers to write the `moc_` and `ui_`
-files directly, removing the dependency on the two tools.
+## Using this template
 
-For the last step, one needs to include the header files and link with
-the QT libraries.
+1. Create a new repository from this one (or clone and re-init git).
+2. Change the project name in `CMakeLists.txt`:
+   ```cmake
+   project(YourAppName LANGUAGES CXX)
+   ```
+   The executable target is derived from `${PROJECT_NAME}`, so nothing else needs to be renamed.
+3. Start adding your sources under `src/` and list them in the `qt_add_executable(...)` call.
 
-On my system the header files are in `/usr/include/qt6`. This means I
-need to add the option `-I /usr/include/qt6` to my `g++` command. This
-project also requires headers contained in a subfolder of this,
-so I will add a second `-I` option (see the full command below).
+## Tooling
 
-As for the shared libraries, in my case they are installed in a system
-folder that is scanned by default by the linker, so I don't have to
-specify the path. We need the files `libQt6Widgets.so`, `libQt6Core.so`
-and `libQt6Gui.so`, which we can include with
-`-lQt6Widgets -lQt6Core -lQt6Gui`. If your linker does not find them,
-locate them and include their folder with `-L /path/to/the/folder`.
-
-So the command for step 3 becomes:
-
-```
-g++ main.cpp mainwindow.cpp moc_mainwindow.cpp \
-	-I /usr/include/qt6 -I /usr/include/qt6/QtWidgets \
-	-lQt6Widgets -lQt6Core -lQt6Gui
-	-o run
-```
-
-And finally you can enjoy your new app:
-
-```
-./run
-```
+- **Formatting**: `clang-format -i src/*.cpp src/*.h`
+- **Linting**: `clang-tidy -p build src/*.cpp`
+- **IDE support**: `compile_commands.json` is generated automatically in `build/` and picked up by `clangd`.

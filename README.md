@@ -10,10 +10,20 @@ A minimal C++/Qt6 base project using CMake. Intended as a starting point for new
 
 On Fedora: `sudo dnf install cmake gcc-c++`
 
+## Qt location
+
+This project expects the environment variable `QT_PREFIX_PATH` to point at the Qt toolchain directory, for example:
+
+```sh
+export QT_PREFIX_PATH="$HOME/Qt/6.11.0/gcc_64"
+```
+
+Add that line to your shell rc (`~/.zshrc`, `~/.bashrc`, …) so it persists.
+
 ## Build
 
 ```sh
-cmake -B build -S .
+cmake -B build -S . -DCMAKE_PREFIX_PATH="$QT_PREFIX_PATH"
 cmake --build build
 ```
 

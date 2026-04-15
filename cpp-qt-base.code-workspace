@@ -28,16 +28,30 @@
 		"version": "2.0.0",
 		"tasks": [
 			{
-				"label": "Build & Run",
+				"label": "Build & Run (Debug)",
 				"type": "shell",
-				"command": "cmake -S . -B build -DCMAKE_PREFIX_PATH=\"$QT_PREFIX_PATH\" && cmake --build build && ./build/CppQtBase",
+				"command": "cmake --preset debug && cmake --build --preset debug && ./build/debug/CppQtBase",
+				"group": "build",
+				"problemMatcher": []
+			},
+			{
+				"label": "Build & Run (Release)",
+				"type": "shell",
+				"command": "cmake --preset release && cmake --build --preset release && ./build/release/CppQtBase",
+				"group": "build",
+				"problemMatcher": []
+			},
+			{
+				"label": "Build & Run (ASan)",
+				"type": "shell",
+				"command": "cmake --preset asan && cmake --build --preset asan && ./build/asan/CppQtBase",
 				"group": "build",
 				"problemMatcher": []
 			},
 			{
 				"label": "clang-tidy: all",
 				"type": "shell",
-				"command": "run-clang-tidy -p build -quiet $(git ls-files \"src/*.cpp\" \"src/*.h\")",
+				"command": "run-clang-tidy -p build/debug -quiet $(git ls-files \"src/*.cpp\" \"src/*.h\")",
 				"group": "build",
 				"presentation": {
 					"panel": "shared"

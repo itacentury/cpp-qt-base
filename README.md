@@ -22,16 +22,23 @@ Add that line to your shell rc (`~/.zshrc`, `~/.bashrc`, …) so it persists.
 
 ## Build
 
-```sh
-cmake -B build -S . -DCMAKE_PREFIX_PATH="$QT_PREFIX_PATH"
-cmake --build build
-```
-
-Run the resulting binary:
+The project ships with three CMake presets. Each one lives in its own build directory (`build/debug`, `build/release`, `build/asan`), so you can switch between them without reconfiguring.
 
 ```sh
-./build/CppQtBase
+cmake --preset <debug|release|asan>
+cmake --build --preset <debug|release|asan>
+./build/<preset>/CppQtBase
 ```
+
+### Which preset should I use?
+
+| Preset    | Flags                                  | Use it for                                                      |
+| --------- | -------------------------------------- | --------------------------------------------------------------- |
+| `debug`   | `-O0 -g`                               | Day-to-day development and stepping through code in a debugger. |
+| `release` | `-O3 -DNDEBUG`, LTO via `ENABLE_IPO`   | Shipping, installing, and performance measurements.             |
+| `asan`    | Debug + `-fsanitize=address,undefined` | Hunting memory bugs, UB, heap corruption, or sporadic crashes.  |
+
+Rule of thumb: `debug` for development, `release` for the outside world, `asan` when something blows up. Run `asan` once before cutting a release — if it stays silent, the release build is far less likely to hide undefined behavior.
 
 ## Using this template
 

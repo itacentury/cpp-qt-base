@@ -30,7 +30,7 @@
 			{
 				"label": "Build & Run",
 				"type": "shell",
-				"command": "cmake -S . -B build -DCMAKE_PREFIX_PATH=/home/juli/Qt/6.11.0/gcc_64 && cmake --build build && ./build/CppQtBase",
+				"command": "cmake -S . -B build -DCMAKE_PREFIX_PATH=\"$QT_PREFIX_PATH\" && cmake --build build && ./build/CppQtBase",
 				"group": "build",
 				"problemMatcher": []
 			},

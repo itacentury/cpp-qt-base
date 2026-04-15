@@ -12,7 +12,7 @@ Checks: >
   -cppcoreguidelines-avoid-magic-numbers,
   -readability-magic-numbers
 WarningsAsErrors: ""
-HeaderFilterRegex: "^/home/juli/Repos/cpp-qt-base/src/.*"
+HeaderFilterRegex: "(^|/)src/.*"
 FormatStyle: file
 CheckOptions:
   - key: modernize-use-nullptr.NullMacros
